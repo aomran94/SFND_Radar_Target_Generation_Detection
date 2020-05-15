@@ -146,18 +146,27 @@ figure,surf(doppler_axis,range_axis,RDM);
 
 % *%TODO* :
 %Select the number of Training Cells in both the dimensions.
+nCTdist = 10;       % 0.5 percent of the total range (200 m)
+nCTv = 5;
 
 % *%TODO* :
 %Select the number of Guard Cells in both dimensions around the Cell under 
 %test (CUT) for accurate estimation
+nCGdist = 4;
+nCGv = 2;
 
 % *%TODO* :
 % offset the threshold by SNR value in dB
+offset = 1.4;
 
 % *%TODO* :
-%Create a vector to store noise_level for each iteration on training cells
-noise_level = zeros(1,1);
+%Create a vector to store noiseVal for each iteration on training cells
+noiseVal = zeros(Nr/2-2*(nCTv+nCGv),Nd-2*(nCTdist+nCGdist));
+gridSize = (2*nCTdist+2*nCGdist+1)*(2*nCTv+2*nCGv+1);
+nT = gridSize-(2*nCGdist+1)*(2*nCGv+1);
 
+
+%% CFAR Loop
 
 % *%TODO* :
 %design a loop such that it slides the CUT across range doppler map by
