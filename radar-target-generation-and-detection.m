@@ -138,7 +138,7 @@ RDM = 10*log10(RDM) ;
 %dimensions
 doppler_axis = linspace(-100,100,Nd);
 range_axis = linspace(-200,200,Nr/2)*((Nr/2)/400);
-figure,surf(doppler_axis,range_axis,RDM);
+figure('Name', 'Range Doppler Map (RDM)'),surf(doppler_axis,range_axis,RDM);
 
 %% CFAR implementation
 
@@ -180,12 +180,30 @@ nT = gridSize-(2*nCGdist+1)*(2*nCGv+1);
 %it a value of 1, else equate it to 0.
 
 
-   % Use RDM[x,y] as the matrix from the output of 2D FFT for implementing
-   % CFAR
+% Use RDM[x,y] as the matrix from the output of 2D FFT for implementing
+% CFAR
 
+CFARoutput = zeros(size(RDM));
+for j=1:Nd-2*(nCTdist+nCGdist)
+    for i=1:Nr/2-2*(nCTv+nCGv)
+        
+        tCells = db2pow(RDM(i:i+2*(nCTv+nCGv),j:j+2*(nCGdist+nCTdist)));
+        tCells(nCTv+1:end-nCTv,nCTdist+1:end-nCTdist) = 0;
+        
+        noiseVal(i,j) = pow2db(sum(sum(tCells))/nT);
+        
+        sigThresh = noiseVal(i,j)*offset;
+        
+        if RDM(i+(nCTv+nCGv),j+(nCTv+nCGdist))>sigThresh
+            CFARoutput(i+(nCTv+nCGv),j+(nCTv+nCGdist)) = 1;
+        else
+            CFARoutput(i+(nCTv+nCGv),j+(nCTv+nCGdist)) = 0;
+        end
+        
+    end
+end
 
-
-
+%% CFAR Output
 
 % *%TODO* :
 % The process above will generate a thresholded block, which is smaller 
@@ -193,18 +211,13 @@ nT = gridSize-(2*nCGdist+1)*(2*nCGv+1);
 %matrix. Hence,few cells will not be thresholded. To keep the map size same
 % set those values to 0. 
  
-
-
-
-
-
-
-
+% the resulting CFARoutput in the previous loop is 512x128 which is exactly
+% equal the size of RDM
 
 % *%TODO* :
 %display the CFAR output using the Surf function like we did for Range
 %Doppler Response output.
-figure,surf(doppler_axis,range_axis,'replace this with output');
+figure('Name','CFAR filtered RDM'),surf(doppler_axis,range_axis,CFARoutput);
 colorbar;
 
 
