@@ -85,31 +85,29 @@ end
 %% RANGE MEASUREMENT
 
 
- % *%TODO* :
-%reshape the vector into Nr*Nd array. Nr and Nd here would also define the size of
-%Range and Doppler FFT respectively.
 
  % *%TODO* :
 %run the FFT on the beat signal along the range bins dimension (Nr) and
 %normalize.
+fftBeatSignal = fft(Mix,Nr)./Nr;
 
  % *%TODO* :
 % Take the absolute value of FFT output
+fftBeatSignal = abs(fftBeatSignal);       
 
  % *%TODO* :
 % Output of FFT is double sided signal, but we are interested in only one side of the spectrum.
 % Hence we throw out half of the samples.
-
+fftBeatSignal = fftBeatSignal(1:(Nr/2));
 
 %plotting the range
 figure ('Name','Range from First FFT')
-subplot(2,1,1)
-
+% subplot(2,1,1)
  % *%TODO* :
- % plot FFT output 
-
- 
+ % plot FFT output
+plot(fftBeatSignal); grid minor               
 axis ([0 200 0 1]);
+xlabel('measured range');
 
 
 
