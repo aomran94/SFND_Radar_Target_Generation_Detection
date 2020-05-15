@@ -184,6 +184,7 @@ nT = gridSize-(2*nCGdist+1)*(2*nCGv+1);
 % CFAR
 
 CFARoutput = zeros(size(RDM));
+
 for j=1:Nd-2*(nCTdist+nCGdist)
     for i=1:Nr/2-2*(nCTv+nCGv)
         
