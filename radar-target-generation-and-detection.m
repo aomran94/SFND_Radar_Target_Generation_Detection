@@ -152,8 +152,8 @@ nCTv = 5;
 % *%TODO* :
 %Select the number of Guard Cells in both dimensions around the Cell under 
 %test (CUT) for accurate estimation
-nCGdist = 4;
-nCGv = 2;
+nCGdist = 5;
+nCGv = 4;
 
 % *%TODO* :
 % offset the threshold by SNR value in dB
